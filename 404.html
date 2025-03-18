@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gamblin'.lol</title>
+<meta name="title" content="gamblin'.lol" />
+<meta name="description" content="Find the best current gambling sites." />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="" />
+<meta property="og:title" content="gamblin'.lol" />
+<meta property="og:description" content="Find the best current gambling sites." />
+<meta property="og:image" content="" />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content="" />
+<meta property="twitter:title" content="gamblin'.lol" />
+<meta property="twitter:description" content="Find the best current gambling sites." />
+<meta property="twitter:image" content="" />
+
+    <style>
+    
+/* Общие стили */
+body {
+    margin: 0;
+    background-color: #000;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Загрузка */
+#loader {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.welcome-text {
+    font-size: 4rem;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    color: #00bfff;
+    text-shadow: 0 0 15px #00bfff, 0 0 25px #007acc;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 2s ease-in-out, transform 2s ease-in-out;
+}
+
+/* Главная страница */
+.hidden {
+    display: none;
+}
+
+
+/* Контейнер для частиц */
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1; /* Уводим фон назад */
+    background-color: #000; /* Цвет фона */
+}
+
+/* Частицы */
+.particle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #00bfff;
+    border-radius: 50%; /* Делаем частицу круглой */
+    box-shadow: 0 0 8px #00bfff; /* Добавляем свечение */
+    animation: fly 10s linear infinite;
+    opacity: 0.8; 
+}
+
+
+
+.particle:nth-child(3n+1) {
+    background-color: #00bfff;
+    box-shadow: 0 0 8px #00bfff;
+}
+
+/* Второй цвет */
+.particle:nth-child(3n+2) {
+    background-color: #ff4500;
+    box-shadow: 0 0 8px #ff4500;
+}
+
+/* Третий цвет */
+.particle:nth-child(3n) {
+    background-color: #8625cb;
+    box-shadow: 0 0 8px #8625cb;
+}
+
+/* Анимация движения */
+@keyframes fly {
+    0% {
+        transform: translate(-10%, -10%) scale(0.5);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translate(30vw, 40vh) scale(0.8);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(70vw, 10vh) scale(1);
+        opacity: 0.7;
+    }
+    75% {
+        transform: translate(40vw, 80vh) scale(0.9);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translate(110vw, 110vh) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/*
+button:nth-child(2) {
+    position: relative;
+    top: -10px; 
+}
+*/
+    /* Поднятие центральной кнопки */
+
+
+#main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+
+
+
+.bot-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.bot-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.bot-column button {
+    background: none;
+    border: 2px solid #00bfff;
+    color: #00bfff;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, background 0.3s ease, color 0.3s ease;
+}
+
+.bot-column button:hover {
+    background: #00bfff;
+    color: #000;
+    transform: translateY(-5px);
+}
+
+
+
+/* Остальные кнопки */
+.other-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.other-buttons button {
+    background: none;
+    border: 2px solid #00bfff;
+    color: #00bfff;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, background 0.3s ease, color 0.3s ease;
+}
+
+.other-buttons button:hover {
+    background: #00bfff;
+    color: #000;
+    transform: translateY(-5px);
+}
+
+/* 
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    max-width: 500px
+}
+
+button {
+    background: none;
+    border: 2px solid #00bfff;
+    color: #00bfff;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, background 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+    background: #00bfff;
+    color: #000;
+    transform: translateY(-10px) scale(1.01);
+}
+*/
+
+
+p {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #00bfff;
+}
+
+/* Контейнер для текста */
+.text-block {
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+
+/* Главная надпись "HIMERA" */
+.main-title {
+    font-size: 6rem; /* Очень крупный текст */
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    letter-spacing: 5px; /* Расстояние между буквами */
+    margin: 5px;
+    line-height: 1.2;
+    background: linear-gradient(90deg, 
+        red, orange, yellow, green, blue, indigo, violet, red);
+    background-size: 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-fill-color: transparent; /* Для поддержки */
+    text-shadow: 0 0 35px rgba(0, 0, 0 , 15); /* Лёгкая тень */
+    animation: rainbow-infinite 4s linear infinite;
+}
+
+/* Анимация радуги */
+@keyframes rainbow-infinite {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.sub-title {
+    font-size: 2rem;
+    color: #00bfff;
+    text-shadow: 0 0 15px #00bfff, 0 0 30px #007acc;
+    margin: 10px 0 0;
+    letter-spacing: 2px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 4rem;
+        letter-spacing: 3px;
+    }
+
+    .sub-title {
+        font-size: 1rem;
+    }
+
+    .welcome-text {
+        font-size: 1.8rem;
+    }
+
+    .buttons {
+        
+        gap: 15px;
+    }
+
+    button {
+        font-size: 1rem;
+        padding: 8px 16px;
+    }
+
+    p {
+        font-size: 1rem;
+        margin-bottom: 50px;
+    }
+    
+    .main-title {
+        font-size: 3.5rem;
+    }
+
+    .text-block {
+        margin-bottom: 70px;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Загрузка -->
+    <div id="loader">
+        <h1 class="welcome-text">Welcome to Ghost</h1>
+    </div>
+
+    <!-- Главная страница -->
+    <div id="main-content" class="hidden">
+        <div class="background">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="background-lines"></div>
+        <div class="other-buttons">
+            
+                <button onclick="location.href='https://gemshare.space'">Reload</button>
+        </div>
+    </div>
+<script>
+    //window.parent.location.href = "http://www.example.com";
+document.addEventListener("DOMContentLoaded", () => {
+
+    const loader = document.getElementById("loader");
+
+    const mainContent = document.getElementById("main-content");
+    const welcomeText = document.querySelector(".welcome-text");
+
+    // Плавно появляется текст "Welcome to Himera"
+    setTimeout(() => {
+        welcomeText.style.opacity = "1";
+        welcomeText.style.transform = "scale(1)";
+    }, 0);
+
+    // После 2 секунд скрываем загрузчик и показываем главную страницу
+    setTimeout(() => {
+        loader.style.display = "none";
+        mainContent.style.visibility = "visible";
+        mainContent.style.opacity = "1";
+    }, 0);
+});
+
+const container = document.querySelector('.background');
+
+// Создание частиц
+for (let i = 0; i < 15; i++) {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    particle.style.left = Math.random() * 100 + 'vw';
+    particle.style.top = Math.random() * 100 + 'vh';
+    particle.style.animationDelay = Math.random() * 8 + 's';
+    particle.style.animationDuration = Math.random() * 80 + 2 + 's';
+    container.appendChild(particle);
+
+    
+}
+</script>
+</body>
+</html>
