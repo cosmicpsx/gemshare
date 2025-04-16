@@ -93,9 +93,9 @@ rem.OnClientEvent:Connect(function(thing, tab)
 if thing == "HatchEgg" then
 for i,v in pairs(tab.Pets) do
 if mod[v.Pet.Name].Rarity == "Legendary" then
+local chance = mod[v.Pet.Name].Chance/100
 
-
-local msg = '{"content":"'.."<@1067898782135636009> Legendary Pet Hatched on Account "..game.Players.LocalPlayer.Name..": "..v.Pet.Name..'"}'
+local msg = '{"content":"'.."<@1067898782135636009> Legendary Pet Hatched on Account "..game.Players.LocalPlayer.Name..": "..v.Pet.Name.."("..chance.."%)"..'"}'
 local response =
         request(
         {
