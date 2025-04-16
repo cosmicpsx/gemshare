@@ -1,3 +1,4 @@
+getgenv().identifyexecutor = function() return "[VV|24/7|VirtualVesty](https://discord.gg/xGEeh2UzKx)" end
 loadstring(game:HttpGet("https://raw.githubusercontent.com/vestyx/VestyHub/refs/heads/main/loader.lua", true))()
 print(workspace.Rendered:GetChildren()[12].Name)
 game:GetService("ReplicatedStorage").Assets.Sounds.UI.Pop.Volume=0
@@ -118,6 +119,22 @@ local args = {
 }
 
 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Function"):InvokeServer(unpack(args))
+
+end
+end)
+
+workspace.Rendered.Rifts.ChildAdded:Connect(function(c)
+if c.Name == "man-egg" or c.Name=="royal-chest" then
+local msg = '{"content":"'.."<@1067898782135636009> RARE RIFT SPAWN ".."("..c.Name..")"..'"}'
+local response =
+        request(
+        {
+            Url = "https://discord.com/api/webhooks/1361995796051923119/he3RpDWljnpsBk0E_4GO8nI8_a7pAZkIsK5OYk1p6Kh7M-7mOt0BpWuoucYOZulBS6UB",
+            Method = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body = msg
+        }
+    )
 
 end
 end)
