@@ -85,3 +85,28 @@ cgemtext.Text = format(math.round(coindiff/15)).."/s"
 end
 
 end)
+
+local mod = require(game:GetService("ReplicatedStorage").Shared.Data.Pets)
+
+local rem = game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event
+rem.OnClientEvent:Connect(function(thing, tab)
+if thing == "HatchEgg" then
+for i,v in pairs(tab.Pets) do
+if mod[v.Pet.Name].Rarity == "Legendary" then
+
+
+local msg = '{"content":"'.."<@1067898782135636009> Legendary Pet Hatched on Account "..game.Players.LocalPlayer.Name..": "..v.Pet.Name..'"}'
+local response =
+        request(
+        {
+            Url = "https://discord.com/api/webhooks/1361995796051923119/he3RpDWljnpsBk0E_4GO8nI8_a7pAZkIsK5OYk1p6Kh7M-7mOt0BpWuoucYOZulBS6UB",
+            Method = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body = msg
+        }
+    )
+
+end
+end
+end
+end)
