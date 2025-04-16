@@ -110,3 +110,14 @@ end
 end
 end
 end)
+spawn(function()
+while wait(20) do
+local args = {
+    [1] = "ClaimPlaytime",
+    [2] = math.random(1,12)
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Function"):InvokeServer(unpack(args))
+
+end
+end)
