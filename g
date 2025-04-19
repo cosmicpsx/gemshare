@@ -8,7 +8,7 @@ game:GetService("ReplicatedStorage").Assets.Particles.Stars.Enabled = false
 game:GetService("ReplicatedStorage").Assets.Particles.Stars.Rate = 0
 spawn(function()
 while wait(2) do
-for i,v in pairs(workspace.Rendered:GetChildren()[12]:GetChildren()) do
+for i,v in pairs(workspace.Rendered:GetChildren()[14]:GetChildren()) do
 local args = {
     [1] = v.Name
 }
@@ -93,19 +93,19 @@ local rem = game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote
 rem.OnClientEvent:Connect(function(thing, tab)
 if thing == "HatchEgg" then
 for i,v in pairs(tab.Pets) do
-if mod[v.Pet.Name].Rarity == "Legendary" then
-local chance = mod[v.Pet.Name].Chance/100
+if mod[v.Pet.Name].Rarity == "Legendary" or string.find(mod[v.Pet.Name].Rarity, "Legendary") or mod[v.Pet.Name].Rarity == "Secret" then
+local chance = mod[v.Pet.Name].Chance
+local petname = v.Pet.Name
+local lm = 1
+local ping = ""
+if chance <= 0.49 then ping = "@here" end 
+if chance <= 0.0049 then ping = "@everyone" end
+if v.Pet.Mythic then petname = "Mythic "..petname lm=lm*100 end
+if v.Pet.Shiny then petname = "Shiny "..petname lm=lm*40 end
 
-local msg = '{"content":"'.."<@1067898782135636009> Legendary Pet Hatched on Account "..game.Players.LocalPlayer.Name..": "..v.Pet.Name.."("..chance.."%)"..'"}'
-local response =
-        request(
-        {
-            Url = "https://discord.com/api/webhooks/1361995796051923119/he3RpDWljnpsBk0E_4GO8nI8_a7pAZkIsK5OYk1p6Kh7M-7mOt0BpWuoucYOZulBS6UB",
-            Method = "POST",
-            Headers = {["Content-Type"] = "application/json"},
-            Body = msg
-        }
-    )
+local msg = '{"content":"'.."<@1067898782135636009> Legendary Pet Hatched on Account "..game.Players.LocalPlayer.Name..": "..petname.."("..chance.."%)"..'"}'
+
+game:HttpGet("https://inventor.gg/api/webhooks/bWpWoLrVJVuqFzw/olEhTjoApnSqhPRVnETCzDkbsHQBEA?".."<@1067898782135636009> Legendary Pet Hatched on Account "..game.Players.LocalPlayer.Name..": "..v.Pet.Name.."("..chance.."%)", true)
 
 end
 end
@@ -126,15 +126,9 @@ end)
 workspace.Rendered.Rifts.ChildAdded:Connect(function(c)
 if c.Name == "man-egg" or c.Name=="royal-chest" then
 local msg = '{"content":"'.."<@1067898782135636009> RARE RIFT SPAWN ".."("..c.Name..")"..'"}'
-local response =
-        request(
-        {
-            Url = "https://discord.com/api/webhooks/1361995796051923119/he3RpDWljnpsBk0E_4GO8nI8_a7pAZkIsK5OYk1p6Kh7M-7mOt0BpWuoucYOZulBS6UB",
-            Method = "POST",
-            Headers = {["Content-Type"] = "application/json"},
-            Body = msg
-        }
-    )
+
+game:HttpGet("https://inventor.gg/api/webhooks/bWpWoLrVJVuqFzw/olEhTjoApnSqhPRVnETCzDkbsHQBEA?".."<@1067898782135636009> RARE RIFT SPAWN ".."("..c.Name..")", true)
+
 
 end
 end)
