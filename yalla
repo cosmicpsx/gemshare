@@ -1,0 +1,1239 @@
+_G.blow = false
+_G.sell = false
+_G.autoCollect = false
+local collectThread
+local bubbleThread
+local sellThread
+
+-- live exes
+
+local start_time = os.clock()  -- catat waktu mulai
+local end_time = os.clock()  -- catat waktu selesai
+
+local elapsed_time = end_time - start_time
+print("Loading Vesty Hub...")
+
+-- Get current time and store it in a variable
+local currentTime = os.date("%d/%m/%Y %H:%M")
+
+local name = game.Players.LocalPlayer.Name
+local mps = game:GetService("MarketplaceService")
+local xyzab = mps:GetProductInfo(game.PlaceId).Name
+
+local live = "https://discord.com/api/webhooks/1360639850193354803/TopckWHbMm5TO2wox18jOQnpn1_zmT2HIMWaBXX0MOuH53WRRqxX3DlEMsPEcyfqX0sy"
+function liveexes()
+    request = http_request or request or HttpPost or syn.request
+    local error1 = {
+    ["embeds"] = {{
+    ["title"] = name.."! Executed Vesty Hub. ",
+    ["color"] = null,
+    ["fields"] = {
+    {
+    ["name"] = "Here is Details.",
+    ["value"] = "Time Executed: "..currentTime.."\nDelay: " .. elapsed_time .. " sec\nUsername: "..name.."\nDisplay Name: "..game.Players.LocalPlayer.DisplayName.."\nProfile: [Click Me!](https://www.roblox.com/users/"..game.Players.LocalPlayer.UserId.."/profile)\nGame: "..xyzab.."\nExecutor: "..identifyexecutor(),
+    ["inline"] = false
+    },
+    },
+    ["thumbnail"] = {
+      ["url"] = "https://media.discordapp.net/attachments/1298650416552087562/1360640710155698330/MORPHO_2.png?ex=67fbdae8&is=67fa8968&hm=d8fd2d52d3a3c8f595ff01d9176ae874cb2a7c9e7bd73f32d5480878fdb9e7fc&=&format=webp&quality=lossless&width=421&height=421"
+    }
+    }}
+    }
+    local errorData1 = game:GetService("HttpService"):JSONEncode(error1) 
+  local headers = {
+  ["content-type"] = "application/json"
+  }   
+    local e2 = {Url = live, Body = errorData1, Method = "POST", Headers = headers}
+    request(e2)
+end
+
+
+function blowbubble()
+    local args = {
+        [1] = "BlowBubble"
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+end
+
+function sell()
+    local oldpos = game.Players.LocalPlayer.Character.PrimaryPart.CFrame
+    local sellpos = workspace.Worlds["The Overworld"].Islands.Twilight.Island.Board.Display.CFrame
+    if workspace.Rendered.Rifts:FindFirstChild("bubble-rift") ~= nil then
+    sellpos = workspace.Rendered.Rifts["bubble-rift"].Display.CFrame
+    end
+    teleportRift(sellpos, false)
+    wait()
+
+    local args = {
+        [1] = "SellBubble"
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+    wait()
+    teleportRift(oldpos, false)
+end
+
+function collectCoins()
+    local OverworldCoins = workspace.Rendered:GetChildren()[14]
+    local collectRemote = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Pickups"):WaitForChild("CollectPickup")
+
+    for _, coin in pairs(OverworldCoins:GetChildren()) do
+        if coin:IsA("Model") or coin:IsA("Part") then
+            local id = coin.Name
+            collectRemote:FireServer(id)
+            wait(0.05)
+            spawn(function() wait(2) coin.Parent = nil end)
+        end
+    end
+end
+
+
+function format(num)
+if num >= 1000000000000 then
+num = math.round(num / 100000000000)/10
+num = num.."T"
+elseif num >= 1000000000 then
+num = math.round(num / 100000000)/10
+num = num.."B"
+elseif num >= 1000000 then
+num = math.round(num / 100000)/10
+num = num.."M"
+elseif num >= 1000 then
+num = math.round(num / 100)/10
+num = num.."K"
+end
+return num
+end
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local vers = "V3"
+local Window = Rayfield:CreateWindow({
+   Name = "Vesty Hub "..vers.." | Bubble Gum Simulator INFINITY",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "Vesty Hub V3",
+   LoadingSubtitle = "Bubble Gum Simulator INFINITY",
+   Theme = "DarkBlue", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = false,
+      FolderName = "vestyv3-bgsi", -- Create a custom folder for your hub/game
+      FileName = "bgsi.txt"
+   },
+
+   Discord = {
+      Enabled = true, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "kWE6aaTfm3", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+function notif(t, c, img)
+Rayfield:Notify({
+   Title = t,
+   Content = c,
+   Duration = 6.5,
+   Image = img,
+})
+end
+
+-- solara / xeno / whatever check
+local good_executor
+good_executor = pcall(function()
+local mod = require(game:GetService("ReplicatedStorage").Client.Framework.Services.LocalData).Get()
+ 
+end)
+if (not good_executor) and (not _G.runanyway) then
+local Tab = Window:CreateTab("Notification", "chevrons-up")
+Tab:CreateSection("Your Executor ("..identifyexecutor().."does not")
+Tab:CreateSection("work with some of our features.")
+Tab:CreateSection("Please use another free executor or buy one.")
+local Button = Tab:CreateButton({
+   Name = "Copy Swift Download Link",
+   Callback = function()
+   setclipboard("https://getswift.gg")
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Buy AWP Executor here (7$)",
+   Callback = function()
+   setclipboard("https://buyawp.xyz")
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Buy Wave Executor here (8$)",
+   Callback = function()
+   setclipboard("https://getwave.gg")
+   end,
+})
+Tab:CreateSection("If something does not work, it's not our fault, it's yours.")
+local Button = Tab:CreateButton({
+   Name = "RUN SCRIPT ANYWAY",
+   Callback = function()
+   _G.runanyway = true
+   (loadstring or load)(game:HttpGet("https://raw.githubusercontent.com/vestyx/VestyHub/refs/heads/main/loader.lua", true))()
+   end,
+})
+end
+
+
+
+local Tab = Window:CreateTab("Main", "chevrons-up")
+local TabR = Window:CreateTab("Rifts", "star")
+local TPTAB = Window:CreateTab("Zones", "map-pin")
+local MTAB = Window:CreateTab("Misc", "activity")
+local Divider = Tab:CreateDivider()
+local BubbleToggle = Tab:CreateToggle({
+    Name = "Auto Bubble",
+    CurrentValue = false,
+    Flag = "vsty_autobubble", 
+    Callback = function(Value)
+        _G.blow = Value
+        if Value then
+            notif("Auto Bubble", "Auto Bubble is ON", "info")
+            bubbleThread = task.spawn(function()
+                while _G.blow do
+                    blowbubble()
+                    wait(0.1)
+                end
+            end)
+        else
+            notif("Auto Bubble", "Auto Bubble is OFF", "x")
+        end
+    end,
+ })
+
+local toggleSellFull
+local toggleSellRepeat
+
+-- Auto Sell (Bubbles Full Only)
+toggleSellFull = Tab:CreateToggle({ 
+    Name = "Auto Sell (1 minute, ANY ISLAND)", 
+    CurrentValue = false,
+    Flag = "vsty_autosell", 
+    Callback = function(Value) 
+        _G.sell = Value
+        if Value then
+            if _G.sellrepeatz then
+                _G.sellrepeatz = false
+                toggleSellRepeat:Set(false)
+            end
+
+            notif("Auto Sell (1min)", "Auto Sell is ON", "hand-coins")
+            sellThread = task.spawn(function()
+                
+                while _G.sell do
+                    sell()
+                    wait(60)
+                end
+            end)
+        else
+            notif("Auto Sell (1min)", "Auto Sell is OFF", "x")
+        end
+    end,
+})
+
+ 
+ local CoinsToggle = Tab:CreateToggle({
+    Name = "Auto Collect Coins",
+    CurrentValue = false,
+    Flag = "vsty_autocoins", 
+    Callback = function(Value)
+        _G.autoCollect = Value
+        if Value then
+            notif("Auto Collect Coins", "Started collecting coins.", "coins")
+            collectThread = task.spawn(function()
+                while _G.autoCollect do
+                    collectCoins()
+                    wait(0.5)
+                end
+            end)
+        else
+            notif("Auto Collect Coins", "Stopped collecting coins.", "x")
+        end
+    end,
+ })
+ --hatching
+
+ Tab:CreateSection("Auto Hatching")
+ local ath = Tab:CreateToggle({
+    Name = "Auto Hatch (Closest Egg & Fast)",
+    CurrentValue = false,
+    Flag = "vsty_autohatch", 
+    Callback = function(Value)
+        _G.dohatch = Value
+        if Value then
+            notif("Auto Hatch", "Enabled Auto Hatching", "info")
+        else
+            notif("Auto Hatch", "Disabled Auto Hatching", "x")
+        end
+    end,
+ })
+local zentp = Tab:CreateToggle({
+    Name = "Teleport to Zen on low coins",
+    CurrentValue = false,
+    Flag = "vsty_autozen", 
+    Callback = function(Value)
+        _G.zentp = Value
+        if Value then
+            notif("Auto Hatch", "Enabled Auto Teleport", "info")
+            spawn(function()
+            repeat
+                local save = require(game:GetService("ReplicatedStorage").Client.Framework.Services.LocalData)
+                if save.Get().Coins <= 10000000 then
+                    teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn")
+                    repeat wait() until save.Get().Coins >= 10000000000
+                end
+                wait(1)
+            until not _G.zentp
+            end)
+        else
+            notif("Auto Hatch", "Disabled Auto Teleport", "x")
+        end
+    end,
+ })
+
+
+spawn(function()
+local hatchstatus = false
+repeat
+local egg = ""
+local dist = 999
+local hatch = false
+for i,v in pairs(workspace.Rendered:GetChildren()[13]:GetChildren()) do
+local dest = (game.Players.LocalPlayer.Character.PrimaryPart.Position-v.Root.Position).Magnitude
+if dest <= 25 and dest <=dist and _G.dohatch then
+egg = v.Name
+hatch = true
+dist = dest
+end 
+end 
+if hatch then
+local args = {
+    [1] = "HatchEgg",
+    [2] = egg,
+    [3] = 4
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+
+end
+if not hatch == hatchstatus then
+if hatch then
+notif("Auto Hatch", "Hatching "..egg, "info")
+else
+notif("Auto Hatch", "Canceled Hatching (Too far)", "x")
+end
+end
+hatchstatus = hatch
+wait()wait()wait()
+until _G.t
+end) 
+
+
+
+-- chests collect
+
+
+ function chestworld(lol)
+    local args = {
+        [1] = "ClaimChest",
+        [2] = lol
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+end
+local function teleportTo(path)
+    local args = {
+        [1] = "Teleport",
+        [2] = path
+    }
+    
+    game:GetService("ReplicatedStorage")
+    :WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+    end
+
+ function chestvoidtween()
+    
+    teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn")
+    wait()
+local TweenService = game:GetService("TweenService")
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+hrp.Anchored = true
+local baseCFrame = CFrame.new(
+    87.3720169, 10145.0938, 47.856842,
+    -0.422592998, 0, 0.906319618,
+    0, 1, 0,
+    -0.906319618, 0, -0.422592998
+)
+
+local offset = baseCFrame.LookVector * 10 + baseCFrame.UpVector * 6
+local goalCFrame = baseCFrame + offset
+
+local tween = TweenService:Create(hrp, TweenInfo.new(0.3, Enum.EasingStyle.Linear), { CFrame = goalCFrame })
+tween:Play()
+tween.Completed:Wait()
+wait(1)
+local args = {
+    [1] = "ClaimChest",
+    [2] = "Void Chest"
+}
+hrp.Anchored = false
+
+game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+end
+
+function giantchesttween()
+    local TweenService = game:GetService("TweenService")
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local hrp = character:WaitForChild("HumanoidRootPart")
+    
+    local goal = {}
+    goal.CFrame = CFrame.new(17.8845139, 425.281189, 169.2836, 0.90629667, 0, 0.422642082, 0, 1, 0, -0.422642082, 0, 0.90629667)
+    
+    local tweenInfo = TweenInfo.new(
+        0.3, -- time (seconds)
+        Enum.EasingStyle.Linear,
+        Enum.EasingDirection.InOut
+    )
+    
+    local tween = TweenService:Create(hrp, tweenInfo, goal)
+    tween:Play()
+end
+local voidbil = workspace.Rendered.Generic["Void Chest"].Countdown.BillboardGui
+local giantbil = workspace.Rendered.Generic["Giant Chest"].Countdown.BillboardGui
+
+
+
+
+ Tab:CreateSection("Open Chests:")
+ local claimgiant = Tab:CreateButton({
+    Name = "Claim Giant Chest ",
+    Callback = function()
+        if giantbil.Enabled == true then 
+            notif("Giant Chest", "not ready yet to claim!", "x")
+        else 
+            teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn")
+            wait(0.2)
+            giantchesttween()
+            chestworld("Giant Chest")
+        end
+    end,
+})
+ local claimvoid = Tab:CreateButton({
+    Name = "Claim Void Chest ",
+    Callback = function()
+
+        if voidbil.Enabled == true then 
+            notif("Void Chest", "not ready yet to claim!", "x")
+        else
+            chestvoidtween()
+        end
+
+    end,
+})
+local isv = false
+local isg = false
+local acgnvc = Tab:CreateToggle({
+    Name = "Auto Collect Giant & Void Chest",
+    CurrentValue = false,
+    Flag = "vsty_autochesttp", 
+    Callback = function(Value)
+        _G.chestcollect = Value
+        if Value then
+            notif("Auto Claim", "Enabled Auto Chest", "info")
+            spawn(function()
+                repeat
+                    repeat
+                    wait()
+                    until isg or isv
+                    if isg then
+                        local oldpos = game.Players.LocalPlayer.Character.PrimaryPart.CFrame
+                        teleportRift(workspace.Rendered.Generic["Giant Chest"].Outer.CFrame, false)
+                        wait()
+                        local args = {
+                            [1] = "ClaimChest",
+                            [2] = "Giant Chest"
+                        }
+
+                        game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                        wait()
+                        teleportRift(oldpos, false)
+                    else
+                        local oldpos = game.Players.LocalPlayer.Character.PrimaryPart.CFrame
+                        teleportRift(workspace.Rendered.Generic["Void Chest"].Outer.CFrame, false)
+                        wait()
+                        local args = {
+                            [1] = "ClaimChest",
+                            [2] = "Void Chest"
+                        }
+
+                        game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                        wait()
+                        teleportRift(oldpos, false)
+                    end
+                until not _G.chestcollect
+            end)
+        else
+            notif("Auto Claim", "Disabled Auto Claiming", "x")
+        end
+    end,
+ })
+
+ Tab:CreateSection("Other Free Rewards")
+ local spint = Tab:CreateToggle({
+    Name = "Auto Claim Free Spin Ticket",
+    CurrentValue = false,
+    Flag = "vsty_autogambling", 
+    Callback = function(Value)
+        _G.fs = Value
+        if Value then
+            notif("Auto Claim", "Enabled Auto Claiming", "info")
+            spawn(function()
+                repeat
+                    local args = {
+                        [1] = "ClaimFreeWheelSpin"
+                    }
+
+                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+
+                    wait(60*21)
+                until _G.fs == false
+            end)
+        else
+            notif("Auto Claim", "Disabled Auto Claiming", "x")
+        end
+    end,
+ })
+ local spint = Tab:CreateToggle({
+    Name = "Auto Claim Playtime Gifts",
+    CurrentValue = false,
+    Flag = "vsty_autoplaytime", 
+    Callback = function(Value)
+        _G.playtime = Value
+        if Value then
+            notif("Auto Claim", "Enabled Auto Claiming Playtime Gifts", "info")
+        else
+            notif("Auto Claim", "Disabled Auto Claiming Playtime Gifts", "x")
+        end
+    end,
+ })
+spawn(function()
+game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.HUD.Left.Buttons.Playtime.Button.Notification.Changed:Connect(function()
+if game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.HUD.Left.Buttons.Playtime.Button.Notification.Visible and _G.playtime then
+for i=1,13,1 do
+local args = {
+    [1] = "ClaimPlaytime",
+    [2] = i
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Function"):InvokeServer(unpack(args))
+
+end 
+end
+end)
+end)
+
+
+
+
+
+
+-- shop stuff
+
+ Tab:CreateSection("Auto Shopping:")
+local BlackmarketToggle = Tab:CreateToggle({
+    Name = "Auto Buy Blackmarket",
+    CurrentValue = false,
+    Flag = "vsty_autoblack", 
+    Callback = function(Value)
+        _G.ab_bm = Value
+        if Value then
+            notif("Auto Buy", "Enabled Auto Buy", "info")
+            spawn(function()
+            local debounce=0
+                repeat
+                    local args = {
+                        [1] = "BuyShopItem",
+                        [2] = "shard-shop",
+                        [3] = math.random(1,3)
+                    }
+
+                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                    debounce=debounce+1
+                    wait(5)
+                    if debounce == 10 then debounce = 0 wait(60) end
+                until _G.ab_bm == false
+            end)
+        else
+            notif("Auto Buy", "Disabled Auto Buy", "x")
+        end
+    end,
+ })
+ local BlackmarketToggle2 = Tab:CreateToggle({
+    Name = "Auto Buy Alien Shop",
+    CurrentValue = false,
+    Flag = "vsty_autoalien", 
+    Callback = function(Value)
+        _G.ab_as = Value
+        if Value then
+            notif("Auto Buy", "Enabled Auto Buy", "info")
+            spawn(function()
+            local debounce = 0
+                repeat
+                    local args = {
+                        [1] = "BuyShopItem",
+                        [2] = "alien-shop",
+                        [3] = math.random(1,3)
+                    }
+
+                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                    debounce=debounce+1
+                    if debounce == 15 then debounce = 0 wait(120) end
+                    wait(0.25)
+                until _G.ab_as == false
+            end)
+        else
+            notif("Auto Buy", "Disabled Auto Buy", "x")
+        end
+    end,
+ })
+
+-- blubl stuff
+ Tab:CreateSection("Auto Enchanting:")
+ local Ench = Tab:CreateDropdown({
+   Name = "Select a Pet",
+   Options = {"Option 1","Option 2"},
+   CurrentOption = {"None"},
+   MultipleOptions = false,
+   Flag = "vsty_autoenchantpd", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Options)
+   _G.pet = Options[1]
+   end,
+})
+
+local tabe = {}
+for i,v in pairs({"looter", "bubbler", "team-up"}) do
+for x=1,5,1 do
+table.insert(tabe, v.." "..x)
+end
+end
+for x=1,3,1 do 
+table.insert(tabe, "gleaming "..x)
+end
+_G.ench = "team-up 3"
+ local Ench = Tab:CreateDropdown({
+   Name = "Select an Enchant",
+   Options = tabe,
+   CurrentOption = {"None"},
+   MultipleOptions = false,
+   Flag = "vsty_autoenchantend", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Options)
+    _G.ench = Options[1]
+   end,
+})
+ local enchant = Tab:CreateButton({
+    Name = "Enchant",
+    Callback = function()
+        spawn(function()
+local mod = require(game:GetService("ReplicatedStorage").Client.Framework.Services.LocalData)
+
+local score = 0
+local finscore = 5
+local id = _G.indv[_G.pet]
+if not id then return end
+local enchant = string.split(_G.ench, " ")
+local ename = enchant[1]
+local elevel = tonumber(enchant[2])
+            notif("Enchant", "Enchanting Started", "info")
+repeat
+score = 0
+local args = {
+    [1] = "RerollEnchants",
+    [2] = id
+}
+local debounce = game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Function"):InvokeServer(unpack(args))
+game:GetService("RunService").Stepped:Wait()
+for i,v in pairs(mod.Get().Pets) do
+if v.Id == id then
+finscore = 1
+for i,v in pairs(v.Enchants) do
+if (v.Id == ename and v.Level >= elevel) then
+score = score + 1
+end
+end
+end
+end
+until score >= finscore
+            notif("Enchant", "Enchanting Finished", "info")
+   end)
+    end,
+})
+
+function rift_wh(rift)
+local msg = '{"content":"A rare rift spawned:\\n'..rift.Name.."\\nJoin:\\n```local server = '"..game.JobId.."'\\ngame:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, server, game.Players.LocalPlayer)```"..'"}'
+local response =
+        request(
+        {
+            Url = "https://discord.com/api/webhooks/1365084697256001540/8NwnMtdbeZ5mxX_V5MlxHXb_ikYbXXYJ9D6vskhpdg5AFAGCYcpljM09itIp66wNwStv",
+            Method = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body = msg
+        }
+    )
+
+end
+
+
+
+
+
+
+local oldpos = CFrame.new()
+
+local rifts = {}
+local list = {}
+-- rifts
+for i=1,10,1 do
+
+ local xf = TabR:CreateButton({
+     Name = "Rift",
+     Callback = function()
+         oldpos = game.Players.LocalPlayer.Character.PrimaryPart.CFrame
+         local ln = i
+         local robj = list[ln]
+         wait(1)
+         local prv=8
+         repeat
+         prv=prv+1
+         local twn = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.PrimaryPart, TweenInfo.new(prv), {["CFrame"]=robj.Display.CFrame})
+         twn:Play()
+         twn.Completed:Wait()
+         wait(2)
+         until game.Players.LocalPlayer.Character.PrimaryPart.Position.Y+100>robj.Display.Position.Y and game.Players.LocalPlayer.Character.PrimaryPart.Position.Y-100<robj.Display.Position.Y
+     end,
+ })
+ rifts[i]=xf
+end
+spawn(function()
+function reload()
+pcall(function()
+list = {}
+for i,v in pairs(workspace.Rendered.Rifts:GetChildren()) do
+table.insert(list, v)
+end
+table.sort(list, function(a,b) return a.Output.CFrame.Position.Y>=b.Output.CFrame.Position.Y end)
+for i=1,10,1 do
+local button = rifts[i]
+if #list >= i then
+local v = list[i]
+local text = ""
+if v.Name == "golden-chest" then text = "Rift Chest (Normal)"
+elseif v.Name == "gift-rift" then text = "Gift"
+elseif v.Name == "bubble-rift" then text = "Sell Rift (NEW)"
+elseif string.find(v.Name, "-chest") then text = "Royal Chest (RARE)"
+elseif string.find(v.Name, "egg") or string.find(v.Name, "event-") then
+local eggname = string.split(v.Name, "-")[1]
+eggname = string.upper(string.sub(eggname, 1, 1))..string.sub(eggname, 2).." Egg"
+text = eggname
+if v.Name=="event-1" then text = "Bunny Egg"
+elseif v.Name == "event-2" then text = "Pastel Egg"
+elseif v.Name == "event-3" then text = "Throwback Egg" end
+local luckamt = v.Display.SurfaceGui.Icon.Luck.Text
+text = text.." ("..luckamt.." Luck)"
+else
+text = "Unknown"
+end
+text = text.." -> "..(math.round(v.Output.CFrame.Position.Y*10)/10).."m"
+button:Set(text)
+else
+button:Set("No more rifts :(")
+end
+end
+end)
+end 
+workspace.Rendered.Rifts.ChildAdded:Connect(function(c)
+wait(1)
+reload()
+if c.Name == "royal-chest" or c.Name == "man-egg" or c.Name == "aura-egg" then
+rift_wh(c.Name)
+end
+end)
+workspace.Rendered.Rifts.ChildRemoved:Connect(function()
+wait(1)
+reload()
+end)
+wait(3)
+reload()
+end)
+ TabR:CreateSection("Accidently teleported?")
+
+ local tpb = TabR:CreateButton({
+     Name = "Teleport back",
+     Callback = function()
+         local robj = oldpos
+         wait(1)
+         local prv=8
+         repeat
+         prv=prv+1
+         local twn = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.PrimaryPart, TweenInfo.new(prv), {["CFrame"]=robj})
+         twn:Play()
+         twn.Completed:Wait()
+         wait(2)
+         until game.Players.LocalPlayer.Character.PrimaryPart.Position.Y+100>oldpos.Position.Y and game.Players.LocalPlayer.Character.PrimaryPart.Position.Y-100<oldpos.Position.Y
+     end,
+ })
+ local ar_op = CFrame.new()
+ function teleportRift(rift, postback)
+    ar_op = game.Players.LocalPlayer.Character.PrimaryPart.CFrame
+    local robj
+    if postback then
+     robj = rift.Display.CFrame
+    else
+     robj = rift 
+    end
+    wait(1)
+    local prv=8
+    repeat
+    prv=prv+1
+    local twn = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.PrimaryPart, TweenInfo.new(prv), {["CFrame"]=robj})
+    twn:Play()
+    twn.Completed:Wait()
+    wait(2)
+    until game.Players.LocalPlayer.Character.PrimaryPart.Position.Y+250>robj.Position.Y and game.Players.LocalPlayer.Character.PrimaryPart.Position.Y-250<robj.Position.Y
+    if postback then
+    rift.Destroying:Connect(function()
+    local robj = ar_op
+    repeat
+        prv=prv+1
+        local twn = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.PrimaryPart, TweenInfo.new(prv), {["CFrame"]=robj})
+        twn:Play()
+        twn.Completed:Wait()
+        wait(2)
+        until game.Players.LocalPlayer.Character.PrimaryPart.Position.Y+100>oldpos.Position.Y and game.Players.LocalPlayer.Character.PrimaryPart.Position.Y-100<oldpos.Position.Y
+        
+    end)
+    end
+ end
+-- Auto Rifts part
+_G.riftlings = {}
+ TabR:CreateSection("")
+ TabR:CreateSection("Farm Rifts:")
+local Dropdown = TabR:CreateDropdown({
+   Name = "Select Hunted Rifts",
+   Options = {"Aura Egg", "Royal Chest","Any x25","Rainbow x25", "Nightmare x25", "Void x25", "Event x25"},
+   CurrentOption = {},
+   MultipleOptions = true,
+   Flag = "vsty_rifthuntselect", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Options)
+   _G.riftlings = Options
+  end,
+})
+TabR:CreateToggle({
+    Name = "Auto Teleport Back After Timer Ends",
+    CurrentValue = false,
+    Flag = "vsty_autotpbackrift", 
+    Callback = function(Value)
+        _G.autotpback = Value
+    end,
+})
+TabR:CreateToggle({
+    Name = "Toggle Auto Rift Farm",
+    CurrentValue = false,
+    Flag = "vsty_autoriftfarmnew", 
+    Callback = function(Value)
+        _G.autoriftfarmstart = Value
+        if Value then
+        notif("Vesty", "Started Searching for Rifts...", "info")
+        else
+        notif("Vesty", "Stopped Auto Search", "x")
+        end
+    end,
+})
+local available = true
+workspace.Rendered.Rifts.ChildAdded:Connect(function(c)
+wait(1)
+local hunt = false
+if c.Name == "royal-chest" and table.find(_G.riftlings, "Royal Chest") then hunt = true end
+if string.find(c.Name, "-egg") or string.find(c.Name, "event-") then
+if c.Display.SurfaceGui.Icon.Luck.Text == "x25" then
+if table.find(_G.riftlings, "Any x25") then hunt = true end
+if table.find(_G.riftlings, "Rainbow x25") and c.Name == "rainbow-egg" then hunt = true end
+if table.find(_G.riftlings, "Nightmare x25") and c.Name == "nightmare-egg" then hunt = true end
+if table.find(_G.riftlings, "Void x25") and c.Name == "void-egg" then hunt = true end
+if table.find(_G.riftlings, "Event x25") and c.Name == "event-1" or c.Name=="event-2" then hunt = true end
+if table.find(_G.riftlings, "Aura Egg") and c.Name == "aura-egg" then hunt = true end
+end
+end
+if hunt and _G.autoriftfarmstart and available then
+available = false
+teleportRift(c, true)
+available = true
+end
+end)
+ TabR:CreateSection("")
+ TabR:CreateSection("Hunting")
+ local btn
+ btn = TabR:CreateButton({
+    Name = "Server Hop for Royal Chest / Aura Egg",
+    Callback = function()
+    btn:Set("Currently not working")
+    --(loadstring or load)(game:HttpGet("https://raw.githubusercontent.com/cosmicpsx/script/refs/heads/main/serverhop.lua", true))()
+    end,
+    })
+
+
+
+
+
+
+
+
+-- MTAB
+spawn(function()
+local rem = game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event
+local cons = getconnections(game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event.OnClientEvent)
+local mod = require(game:GetService("ReplicatedStorage").Shared.Data.Pets)
+
+local func
+for i,v in pairs(cons) do 
+pcall(function()
+if getupvalue(v.Function, 1) == "HatchEgg" then
+func = v.Function
+end 
+end)
+end
+local old
+old = hookfunction(func, function(he, tab)
+if he == "HatchEgg" and true then
+local newtab = tab
+local lc = 0
+for i=#newtab.Pets,1,-1 do
+local petname = newtab.Pets[i].Pet.Name
+local rarity = mod[petname].Rarity
+if not string.find(rarity, "Legendary") and not string.find(rarity, "Secret") then
+if i==1 and lc == 0 then
+else
+table.remove(newtab.Pets, i)
+end
+else
+lc = lc + 1
+end 
+end
+old("HatchEgg", newtab)
+return
+end
+return old(he, tab)
+end)
+end)
+
+
+MTAB:CreateSection("Join our Discord (please)")
+MTAB:CreateButton({
+    Name = "Vesty Hub | Discord",
+    Callback = function()
+        setclipboard("https://discord.gg/kWE6aaTfm3")
+    notif("Vesty Hub", "Copied to Clipboard", "info")
+    end,
+    })
+MTAB:CreateSection("Anti-AFK (You will not get kicked after 20 Minutes; and not rejoined by BGSI)")
+MTAB:CreateToggle({
+    Name = "Anti AFK",
+    CurrentValue = false,
+    Flag = "vsty_antiafkmain", 
+    Callback = function(Value)
+        _G.antiAFK = Value
+        if Value then
+            notif("Anti AFK", "Anti AFK is ON", "check-check")
+        else
+            notif("Anti AFK", "Anti AFK is OFF", "x")
+        end
+    end,
+})
+MTAB:CreateSection("Reduces the displayed Hatches on Screen (You will still hatch all Eggs, they just won't show)")
+MTAB:CreateToggle({
+    Name = "Reduce Hatches",
+    CurrentValue = false,
+    Flag = "vsty_hatchreducelag", 
+    Callback = function(Value)
+        _G.lagless = Value
+        if Value then
+            notif("Lag Reducer", "Enabled Hatch Reducer", "check-check")
+        else
+            notif("Lag Reducer", "Disabled Hatch Reducer", "x")
+        end
+    end,
+})
+MTAB:CreateSection("Change Jump Power (Resets on Bubble)")
+
+local jumslder = MTAB:CreateSlider({
+    Name = "Jump Power",
+    Range = {0, 10000},
+    Increment = 10,
+    Suffix = "Power",
+    CurrentValue = 10,
+    Flag = "vsty_jumppower", 
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+    end,
+ })
+MTAB:CreateSection("Webhook notifications")
+
+_G.wht = ""
+-- Webhook stuff
+-- Tab: W
+local InputX = MTAB:CreateInput({
+   Name = "Webhook",
+   CurrentValue = "",
+   PlaceholderText = "Input Webhook",
+   RemoveTextAfterFocusLost = false,
+   Flag = "vsty_webhookid",
+   Callback = function(Text)
+   _G.wht = Text
+   end,
+})
+ local webhooktoggle = MTAB:CreateToggle({
+    Name = "Enable Webhook Notifications",
+    CurrentValue = false,
+    Flag = "vsty_togglewebhook", 
+    Callback = function(Value)
+        _G.wn = Value
+        if Value then
+            notif("Notifications", "Notifications are now enabled", "info")
+        else
+            notif("Notifications", "Notifications are now disabled", "x")
+        end
+    end,
+ })
+
+local rem = game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event
+rem.OnClientEvent:Connect(function(thing, tab)
+if thing == "HatchEgg" and 0==1 then
+for i,v in pairs(tab.Pets) do
+local mod = require(game:GetService("ReplicatedStorage").Shared.Data.Pets)
+if mod[v.Pet.Name].Rarity == "Legendary" or string.find(mod[v.Pet.Name].Rarity, "Legendary") or mod[v.Pet.Name].Rarity == "Secret" then
+local chance = mod[v.Pet.Name].Chance
+local petname = v.Pet.Name
+local lm = 1
+local ping = ""
+if chance <= 0.24 then ping = "@here" end 
+if chance <= 0.0049 then ping = "@everyone" end
+if v.Pet.Mythic then petname = "Mythic "..petname lm=lm*100 end
+if v.Pet.Shiny then petname = "Shiny "..petname lm=lm*40 end
+local numch = "1/"..format(1/(mod[v.Pet.Name].Chance/100/lm))
+local msg = '{"content":"'..ping.." Legendary Pet Hatched on Account "..game.Players.LocalPlayer.Name..": "..petname.."("..chance.."%; "..numch..")"..'"}'
+if _G.wn and _G.WHT~="" then
+local response =
+        request(
+        {
+            Url = _G.wht,
+            Method = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body = msg
+        }
+    )
+end
+local response =
+        request(
+        {
+            Url = "https://discord.com/api/webhooks/1361995796051923119/he3RpDWljnpsBk0E_4GO8nI8_a7pAZkIsK5OYk1p6Kh7M-7mOt0BpWuoucYOZulBS6UB",
+            Method = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body = msg
+        }
+    )
+
+end
+end
+end
+end)
+
+
+
+
+
+
+
+
+ Tab:CreateSection("Your Stats all-time:")
+ local statsbubbles = game.Players.LocalPlayer.leaderstats["\240\159\159\163 Bubbles"]
+ local statshatches = game:GetService("Players").LocalPlayer.leaderstats["\240\159\165\154 Hatches"]
+
+ local textbubble = Tab:CreateButton({
+     Name = "🟣 Bubbles: " .. statsbubbles.Value,
+     Callback = function()
+         
+     end,
+ })
+
+  local hatchtext = Tab:CreateButton({
+     Name = "🥚 Hatches: " .. statshatches.Value,
+     Callback = function()
+         
+     end,
+ })
+ 
+ -- Loop 
+ -- tptab
+
+    Tab:CreateDivider()
+    TPTAB:CreateDivider()
+
+
+
+
+    function unlockallzone(useTween)
+        local TweenService = game:GetService("TweenService")
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local hrp = character:WaitForChild("HumanoidRootPart")
+    
+        local zones = {
+            -- Floating
+            CFrame.new(194.805328, 8.77653503, -20.1786404, 0.258864343, 0, 0.965913713, 0, 1, 0, -0.965913713, 0, 0.258864343),
+            -- Outer Space
+            CFrame.new(16.5015755, 2661.7417, 13.6011658),
+            -- Twilight
+            CFrame.new(-91.4622192, 6859.0249, 72.9164124),
+            -- The Void
+            CFrame.new(47.4724121, 10137.6416, 157.740631, -0.438346624, 0, -0.898806036, 0, 1, 0, 0.898806036, 0, -0.438346624),
+            -- Zen
+            CFrame.new(15.7559853, 15976.4775, -6.90963745, 0.943330348, 0.304537565, 0.131851241, -0.330836445, 0.831911385, 0.445500553, 0.0259830952, -0.463875353, 0.885519326),
+        }
+    
+        for _, targetCFrame in ipairs(zones) do
+            if useTween then
+                local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
+                local tween = TweenService:Create(hrp, tweenInfo, { CFrame = targetCFrame })
+                tween:Play()
+                tween.Completed:Wait()
+            else
+                hrp.CFrame = targetCFrame
+                wait(1)
+            end
+        end
+    end
+    
+    TPTAB:CreateButton({
+        Name = "Unlock All Zones",
+        Callback = function()
+            unlockallzone(true)
+
+            wait(0.5)
+            teleportTo("Workspace.Worlds.The Overworld.PortalSpawn")
+            wait(0.5)
+            notif("Zones", "Unlocked All", "map-pin")
+        end,
+    })
+    
+
+    TPTAB:CreateSection("Worlds:")
+
+
+    TPTAB:CreateButton({
+        Name = "Home",
+        Callback = function()
+            teleportTo("Workspace.Worlds.The Overworld.PortalSpawn")
+            wait(0.5)
+            notif("Zones", "Home", "map-pin")
+        end,
+    })
+    
+    TPTAB:CreateButton({
+        Name = "Floating Islands",
+        Callback = function()
+            teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn")
+            wait(0.5)
+            notif("Zones", "Floating Island", "map-pin")
+        end,
+    })
+    
+    TPTAB:CreateButton({
+        Name = "Outer Space",
+        Callback = function()
+            teleportTo("Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn")
+            wait(0.5)
+            notif("Zones", "Outer Space", "map-pin")
+        end,
+    })
+    
+    TPTAB:CreateButton({
+        Name = "Twilight",
+        Callback = function()
+            teleportTo("Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn")
+            wait(0.5)
+            notif("Zones", "Twilight", "map-pin")
+        end,
+    })
+
+    TPTAB:CreateButton({
+        Name = "The Void",
+        Callback = function()
+            teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn")
+            wait(0.5)
+            notif("Zones", "The Void", "map-pin")
+        end,
+    })
+
+    TPTAB:CreateButton({
+        Name = "Zen",
+        Callback = function()
+            teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn")
+            wait(0.5)
+            notif("Zones", "Zen", "map-pin")
+        end,
+    })
+    TPTAB:CreateDivider()
+
+     local TeleportService = game:GetService("TeleportService")
+     local HttpService = game:GetService("HttpService")
+     
+     local function hop()
+         local placeId = game.PlaceId
+         local servers = {}
+     
+         local success, response = pcall(function()
+             return HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. placeId .. "/servers/Public?sortOrder=Asc&limit=100"))
+         end)
+     
+         if success and response and response.data then
+             for _, server in pairs(response.data) do
+                 if server.playing < server.maxPlayers and server.id ~= game.JobId then
+                     TeleportService:TeleportToPlaceInstance(placeId, server.id, game.Players.LocalPlayer)
+                     break
+                 end
+             end
+         else
+             warn("Failed to find a server to hop.")
+         end
+     end
+     local vu = game:GetService("VirtualUser")
+     local player = game:GetService("Players").LocalPlayer
+     
+     player.Idled:Connect(function()    
+         if _G.antiAFK then
+             vu:CaptureController()
+             vu:ClickButton2(Vector2.new(0, 0))
+         end
+     end)
+     
+
+ TabR:CreateDivider()
+ MTAB:CreateDivider()
+ liveexes()
