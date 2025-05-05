@@ -705,6 +705,8 @@ if not _G.looptime then
 _G.looptime = true
 end
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/KazeOnTop/Rice-Anti-Afk/main/Wind", true))()
+
 
 
 repeat
